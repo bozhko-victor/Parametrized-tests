@@ -4,18 +4,24 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.stream.Stream;
 
 import static com.codeborne.selenide.Selectors.byName;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Selenide.actions;
+import static com.codeborne.selenide.impl.Cleanup.of;
 import static org.openqa.selenium.By.linkText;
 
 public class ParametrazedTest {
 
     static final String URL1 = "https://asana.com/ru/create-account";
     static final String URL2 = "https://englishtochka.ru/webinar/";
+    static final String URL3 = "https://lookfreedom.ru/napisat-nam/";
 
     @BeforeAll
     static void setup() {
@@ -53,6 +59,32 @@ public class ParametrazedTest {
         $(".form:nth-child(2) span").click();
         $(".container").shouldHave(Condition.text("ВАЖНО!"));
 
+    }
+    static Stream<Arguments> lookFreedomTest () {
+        return Stream.of(
+                Arguments.of(
+                      "Fedor", "mymail@gmail.com", "acquaintance", "Good day!"
+                ),
+                Arguments.of(
+                       "Sharik", "sharik@gmail.com", "acquaintance", "Good night!"
+                ),
+                Arguments.of(
+                        "Fil", "foolfil@gmail.com", "acquaintance", "Good morning!"
+                )
+        );
+    }
+
+    @MethodSource("lookFreedomTest")
+    @ParameterizedTest(name = "{0}")
+        void lookFreedomFormTest(String name, String email, String topic, String message) {
+        open(URL3);
+        $(byName("your-name")).setValue(name);
+        $(byName("your-email")).setValue(email);
+        $(byName("your-subject")).setValue(topic);
+        $(byName("your-message")).setValue(message);
+        $(".wpcf7-submit").click();
+        $(".wpcf7-response-output").
+                shouldHave(Condition.text("Thank you for your message. It has been sent."));
     }
 
 }
