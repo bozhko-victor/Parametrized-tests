@@ -14,5 +14,4 @@ public class TestBase {
         Configuration.browser = "chrome";
         Configuration.startMaximized = true;
     }
-
 }

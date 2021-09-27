@@ -17,7 +17,7 @@ import static com.codeborne.selenide.Selenide.actions;
 import static com.codeborne.selenide.impl.Cleanup.of;
 import static org.openqa.selenium.By.linkText;
 
-public class ParametrazedTest extends TestBase {
+class ParametrazedTest extends TestBase {
 
 
     @ValueSource(strings = {
@@ -77,5 +77,4 @@ public class ParametrazedTest extends TestBase {
         $(".wpcf7-response-output").
                 shouldHave(Condition.text("Thank you for your message. It has been sent."));
     }
-
 }
